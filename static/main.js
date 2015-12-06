@@ -1,4 +1,4 @@
-var app = angular.module('DemoApp', ['ui.router', 'satellizer']);
+var app = angular.module('DemoApp', ['ui.router', 'satellizer', 'toastr']);
 
 app.config(function ($stateProvider, $urlRouterProvider, $authProvider) {
 
@@ -24,7 +24,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $authProvider) {
   $authProvider.facebook({
     clientId: '413108255566242',
     // by default, the redirect URI is http://localhost:5000
-    redirectUri: 'http://localhost:5000/static/index.html'
+    redirectUri: location.origin + location.pathname
   });
 
 });
@@ -44,7 +44,7 @@ app.run(function ($rootScope, $state, $auth) {
 });
 
 
-app.controller('LoginSignupCtrl', function ($scope, $auth, $state) {
+app.controller('LoginSignupCtrl', function ($scope, $auth, $state, toastr) {
 
   $scope.signUp = function () {
     $auth
@@ -54,7 +54,10 @@ app.controller('LoginSignupCtrl', function ($scope, $auth, $state) {
         $state.go('secret');
       })
       .catch(function (response) {
-        console.log("error response", response);
+        toastr.error(
+          'Error!',
+          {closeButton: true}
+        );
       })
   };
 
@@ -66,7 +69,10 @@ app.controller('LoginSignupCtrl', function ($scope, $auth, $state) {
         $state.go('secret');
       })
       .catch(function (response) {
-        console.log("error response", response);
+        toastr.error(
+          'Email or password not correct!',
+          {closeButton: true}
+        );
       })
   };
 

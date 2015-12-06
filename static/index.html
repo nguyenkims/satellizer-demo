@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Demo Satellizer</title>
-</head>
-<body ng-app="DemoApp">
 
-<a ui-sref="home">Home</a>
-<a ui-sref="login">Login</a>
-<a ui-sref="secret">Secret</a>
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/components-font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-social/bootstrap-social.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/angular-toastr/dist/angular-toastr.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+
+<body ng-app="DemoApp" class="container">
 
 <div ui-view></div>
 
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
 <script src="bower_components/satellizer/satellizer.min.js"></script>
+<script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
 
 <script src="main.js"></script>
 </body>

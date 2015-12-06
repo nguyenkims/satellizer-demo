@@ -20,7 +20,11 @@
   ],
   "dependencies": {
     "angular": "angularjs#~1.4.8",
+    "angular-toastr": "~1.6.0",
     "angular-ui-router": "~0.2.15",
+    "bootstrap": "~3.3.6",
+    "bootstrap-social": "~4.11.0",
+    "components-font-awesome": "~4.5.0",
     "satellizer": "~0.13.1"
   }
 }

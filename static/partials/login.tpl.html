@@ -1,7 +1,27 @@
-Login
+<div class="row">
+    <button ng-click="auth('facebook')" class="btn btn-block btn-social btn-facebook" type="button">
+        <span class="fa fa-facebook"></span> Sign in with Facebook
+        </a>
+</div>
+<div class="row">
+    <div class="text-center">
+        <hr>
+        Or
+        <hr>
+    </div>
+</div>
 
-<input type="text" ng-model="email" placeholder="Email">
-<input type="password" ng-model="password" placeholder="Password">
-<button ng-click="signUp()">Sign up</button>
-<button ng-click="login()">Login</button>
-<button ng-click="auth('facebook')">Connect with Facebook</button>
+
+<div class="row">
+    <input type="text" ng-model="email" placeholder="Email" class="form-control">
+    <input type="password" ng-model="password" placeholder="Password" class="form-control">
+    <br>
+
+    <div class="text-center">
+        <div class="btn-group btn-group-lg">
+            <button class="btn btn-default" ng-click="login()">Login</button>
+            <button class="btn btn-default" ng-click="signUp()">Register</button>
+        </div>
+    </div>
+
+</div>
