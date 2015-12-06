@@ -13,9 +13,38 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     })
     .state('login', {
       url: '/login',
-      templateUrl: 'partials/login.tpl.html'
+      templateUrl: 'partials/login.tpl.html',
+      controller: 'LoginSignupCtrl'
     });
 
   $urlRouterProvider.otherwise('/home');
 
+});
+
+
+app.controller('LoginSignupCtrl', function ($scope, $auth, $state) {
+
+  $scope.signUp = function () {
+    $auth
+      .signup({email: $scope.email, password: $scope.password})
+      .then(function (response) {
+        $auth.setToken(response);
+        $state.go('secret');
+      })
+      .catch(function (response) {
+        console.log("error response", response);
+      })
+  };
+
+  $scope.login = function () {
+    $auth
+      .login({email: $scope.email, password: $scope.password})
+      .then(function (response) {
+        $auth.setToken(response);
+        $state.go('secret');
+      })
+      .catch(function (response) {
+        console.log("error response", response);
+      })
+  };
 });
