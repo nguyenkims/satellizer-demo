@@ -1,4 +1,4 @@
-var app = angular.module('DemoApp', ['ui.router']);
+var app = angular.module('DemoApp', ['ui.router', 'satellizer']);
 
 app.config(function ($stateProvider, $urlRouterProvider) {
 
