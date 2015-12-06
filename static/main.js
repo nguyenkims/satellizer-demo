@@ -1,6 +1,6 @@
 var app = angular.module('DemoApp', ['ui.router', 'satellizer']);
 
-app.config(function ($stateProvider, $urlRouterProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, $authProvider) {
 
   $stateProvider
     .state('home', {
@@ -20,6 +20,12 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     });
 
   $urlRouterProvider.otherwise('/home');
+
+  $authProvider.facebook({
+    clientId: '413108255566242',
+    // by default, the redirect URI is http://localhost:5000
+    redirectUri: 'http://localhost:5000/static/index.html'
+  });
 
 });
 
@@ -63,6 +69,17 @@ app.controller('LoginSignupCtrl', function ($scope, $auth, $state) {
         console.log("error response", response);
       })
   };
+
+  $scope.auth = function (provider) {
+    $auth.authenticate(provider)
+      .then(function (response) {
+        console.debug("success", response);
+        $state.go('secret');
+      })
+      .catch(function (response) {
+        console.debug("catch", response);
+      })
+  }
 });
 
 app.controller('SecretCtrl', function ($scope, $state, $auth, $http) {

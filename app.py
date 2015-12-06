@@ -1,6 +1,9 @@
+import json
 import os
+
 import flask
 import jwt
+import requests
 from datetime import datetime, timedelta
 from flask import Flask, jsonify, request
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -10,6 +13,7 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['TOKEN_SECRET'] = 'very secret'
+app.config['FACEBOOK_SECRET'] = os.environ.get('FACEBOOK_SECRET')
 
 db = SQLAlchemy(app)
 
@@ -17,6 +21,7 @@ db = SQLAlchemy(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), nullable=False)
+    facebook_id = db.Column(db.String(100))  # facebook_id
     password = db.Column(db.String(100))
 
     def token(self):
@@ -87,6 +92,38 @@ def user_info():
         return jsonify(id=user.id, email=user.email), 200
 
     return jsonify(error="never reach here..."), 500
+
+
+@app.route('/auth/facebook', methods=['POST'])
+def auth_facebook():
+    access_token_url = 'https://graph.facebook.com/v2.3/oauth/access_token'
+    graph_api_url = 'https://graph.facebook.com/v2.5/me?fields=id,email'
+
+    params = {
+        'client_id': request.json['clientId'],
+        'redirect_uri': request.json['redirectUri'],
+        'client_secret': app.config['FACEBOOK_SECRET'],
+        'code': request.json['code']
+    }
+
+    # Exchange authorization code for access token.
+    r = requests.get(access_token_url, params=params)
+    # use json.loads instad of urlparse.parse_qsl
+    access_token = json.loads(r.text)
+
+    # Step 2. Retrieve information about the current user.
+    r = requests.get(graph_api_url, params=access_token)
+    profile = json.loads(r.text)
+
+    # Step 3. Create a new account or return an existing one.
+    user = User.query.filter_by(facebook_id=profile['id']).first()
+    if user:
+        return jsonify(token=user.token())
+
+    u = User(facebook_id=profile['id'], email=profile['email'])
+    db.session.add(u)
+    db.session.commit()
+    return jsonify(token=u.token())
 
 
 @app.route('/islive')
