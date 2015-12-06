@@ -1,0 +1,24 @@
+{
+  "name": "demo satellizer",
+  "version": "0.0.0",
+  "homepage": "https://github.com/nguyenkims/satellizer-demo",
+  "authors": [
+    "Son Nguyen Kim"
+  ],
+  "description": "a simple webapp with facebook login",
+  "keywords": [
+    "satellizer",
+    "angularjs"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "angularjs#~1.4.8"
+  }
+}
