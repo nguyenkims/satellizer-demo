@@ -1,7 +1,68 @@
+import os
 import flask
-from flask import Flask
+import jwt
+from datetime import datetime, timedelta
+from flask import Flask, jsonify, request
+from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+app.config['TOKEN_SECRET'] = 'very secret'
+
+db = SQLAlchemy(app)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(100))
+
+    def token(self):
+        payload = {
+            'sub': self.id,
+            'iat': datetime.utcnow(),
+            'exp': datetime.utcnow() + timedelta(days=14)
+        }
+        token = jwt.encode(payload, app.config['TOKEN_SECRET'])
+        return token.decode('unicode_escape')
+
+
+if os.path.exists('db.sqlite'):
+    os.remove('db.sqlite')
+
+db.create_all()
+
+
+@app.route('/auth/signup', methods=['POST'])
+def signup():
+    data = request.json
+
+    email = data["email"]
+    password = data["password"]
+
+    user = User(email=email, password=password)
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify(token=user.token())
+
+
+@app.route('/auth/login', methods=['POST'])
+def login():
+    data = request.json
+
+    email = data.get("email")
+    password = data.get("password")
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify(error="No such user"), 404
+
+    if user.password == password:
+        return jsonify(token=user.token()), 200
+    else:
+        return jsonify(error="Wrong email or password"), 400
 
 
 @app.route('/islive')
