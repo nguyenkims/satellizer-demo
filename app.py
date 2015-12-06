@@ -4,6 +4,7 @@ import jwt
 from datetime import datetime, timedelta
 from flask import Flask, jsonify, request
 from flask.ext.sqlalchemy import SQLAlchemy
+from jwt import DecodeError, ExpiredSignature
 
 app = Flask(__name__)
 
@@ -63,6 +64,29 @@ def login():
         return jsonify(token=user.token()), 200
     else:
         return jsonify(error="Wrong email or password"), 400
+
+
+@app.route('/user')
+def user_info():
+    if not request.headers.get('Authorization'):
+        return jsonify(error='Authorization header missing'), 401
+
+    token = request.headers.get('Authorization').split()[1]
+    try:
+        payload = jwt.decode(token, app.config['TOKEN_SECRET'])
+    except DecodeError:
+        return jsonify(error='Invalid token'), 401
+    except ExpiredSignature:
+        return jsonify(error='Expired token'), 401
+    else:
+        user_id = payload['sub']
+        user = User.query.filter_by(id=user_id).first()
+        if user is None:
+            return jsonify(error='Should not happen ...'), 500
+
+        return jsonify(id=user.id, email=user.email), 200
+
+    return jsonify(error="never reach here..."), 500
 
 
 @app.route('/islive')

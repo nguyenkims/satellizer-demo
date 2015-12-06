@@ -65,9 +65,21 @@ app.controller('LoginSignupCtrl', function ($scope, $auth, $state) {
   };
 });
 
-app.controller('SecretCtrl', function ($scope, $state, $auth) {
+app.controller('SecretCtrl', function ($scope, $state, $auth, $http) {
   $scope.logout = function () {
     $auth.logout();
     $state.go("home");
   };
+
+  getUserInfo();
+
+  function getUserInfo() {
+    $http.get('/user')
+      .then(function (response) {
+        $scope.user = response.data;
+      })
+      .catch(function (response) {
+        console.log("getUserInfo error", response);
+      })
+  }
 });
