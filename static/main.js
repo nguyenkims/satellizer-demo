@@ -10,6 +10,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     .state('secret', {
       url: '/secret',
       templateUrl: 'partials/secret.tpl.html',
+      controller: 'SecretCtrl'
     })
     .state('login', {
       url: '/login',
@@ -46,5 +47,12 @@ app.controller('LoginSignupCtrl', function ($scope, $auth, $state) {
       .catch(function (response) {
         console.log("error response", response);
       })
+  };
+});
+
+app.controller('SecretCtrl', function ($scope, $state, $auth) {
+  $scope.logout = function () {
+    $auth.logout();
+    $state.go("home");
   };
 });
