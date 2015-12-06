@@ -1,3 +1,4 @@
+import os
 import flask
 import jwt
 from datetime import datetime, timedelta
@@ -26,6 +27,9 @@ class User(db.Model):
         token = jwt.encode(payload, app.config['TOKEN_SECRET'])
         return token.decode('unicode_escape')
 
+
+if os.path.exists('db.sqlite'):
+    os.remove('db.sqlite')
 
 db.create_all()
 
