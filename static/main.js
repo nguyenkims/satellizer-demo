@@ -10,7 +10,8 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     .state('secret', {
       url: '/secret',
       templateUrl: 'partials/secret.tpl.html',
-      controller: 'SecretCtrl'
+      controller: 'SecretCtrl',
+      data: {requiredLogin: true}
     })
     .state('login', {
       url: '/login',
@@ -20,6 +21,20 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 
   $urlRouterProvider.otherwise('/home');
 
+});
+
+app.run(function ($rootScope, $state, $auth) {
+  $rootScope.$on('$stateChangeStart',
+    function (event, toState) {
+      var requiredLogin = false;
+      if (toState.data && toState.data.requiredLogin)
+        requiredLogin = true;
+
+      if (requiredLogin && !$auth.isAuthenticated()) {
+        event.preventDefault();
+        $state.go('login');
+      }
+    });
 });
 
 
