@@ -2,7 +2,7 @@ import os
 import flask
 import jwt
 from datetime import datetime, timedelta
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -32,6 +32,38 @@ if os.path.exists('db.sqlite'):
     os.remove('db.sqlite')
 
 db.create_all()
+
+
+@app.route('/auth/signup', methods=['POST'])
+def signup():
+    data = request.json
+
+    email = data["email"]
+    password = data["password"]
+
+    user = User(email=email, password=password)
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify(token=user.token())
+
+
+@app.route('/auth/login', methods=['POST'])
+def login():
+    data = request.json
+
+    email = data.get("email")
+    password = data.get("password")
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify(error="No such user"), 400
+
+    if user.password == password:
+        return jsonify(token=user.token())
+    else:
+        return jsonify(error="Wrong email or password")
+
 
 @app.route('/islive')
 def islive():
