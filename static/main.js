@@ -24,7 +24,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $authProvider) {
   $authProvider.facebook({
     clientId: '413108255566242',
     // by default, the redirect URI is http://localhost:5000
-    redirectUri: 'http://localhost:5000/static/index.html'
+    redirectUri: document.origin + document.pathname;
   });
 
 });
