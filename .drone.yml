@@ -1,4 +1,6 @@
-image: dockerfile/nginx
-
-script:
-  - echo hello world
+pipeline:
+  build:
+    image: python
+    commands:
+      - echo "hey hey"
+      - echo "alo quoi"      
