@@ -1,6 +1,6 @@
 pipeline:
   build:
-    image: python
+    image: python:3.5
     commands:
       - echo "hey hey"
       - echo "alo quoi"      
