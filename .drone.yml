@@ -1,0 +1,4 @@
+image: python3.5-alpine
+
+script:
+  - echo hello world
