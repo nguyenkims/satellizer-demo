@@ -1,4 +1,4 @@
-image: dockerfile/python3.5-alpine
+image: dockerfile/nginx
 
 script:
   - echo hello world
