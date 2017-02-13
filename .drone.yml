@@ -1,4 +1,4 @@
-image: python3.5-alpine
+image: dockerfile/python3.5-alpine
 
 script:
   - echo hello world
