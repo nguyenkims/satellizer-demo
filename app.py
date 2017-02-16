@@ -99,8 +99,8 @@ def user_info():
 
 @app.route('/auth/facebook', methods=['POST'])
 def auth_facebook():
-    access_token_url = 'https://graph.facebook.com/v2.3/oauth/access_token'
-    graph_api_url = 'https://graph.facebook.com/v2.5/me?fields=id,email'
+    access_token_url = 'https://graph.facebook.com/v2.8/oauth/access_token'
+    graph_api_url = 'https://graph.facebook.com/v2.8/me?fields=id,email'
 
     params = {
         'client_id': request.json['clientId'],
