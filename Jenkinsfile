@@ -17,9 +17,15 @@ pipeline {
         stage('Build Docker Image'){
             steps {
                 echo "start building docker image"
-                sh "sudo docker build -t nguyenkims/satellizer-demo:${env.BUILD_ID} ."
-                sh "sudo docker push nguyenkims/satellizer-demo"
-                echo "docker build finished"
+                sh "./build_and_push_docker.sh"
+                echo "docker build and push finished"
+            }
+        }
+        stage('Deploy'){
+            steps {
+                echo "pull the new docker image and replace the container"
+                sh "./deploy.sh"
+                echo "deploy completed"
             }
         }
         
