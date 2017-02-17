@@ -24,7 +24,11 @@ pipeline {
         stage('Deploy'){
             steps {
                 echo "pull the new docker image and replace the container"
-                sh "./deploy.sh"
+                // get the facebook secret from credential binding plugin
+                withCredentials([string(credentialsId: 'SATELLIZER_FACEBOOK_SECRET', 
+                    variable: 'SATELLIZER_FACEBOOK_SECRET')]) {
+                    sh "./deploy.sh"
+                }
                 echo "deploy completed"
             }
         }
