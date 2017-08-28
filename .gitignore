@@ -3,6 +3,7 @@
 
 # database
 *.sqlite
+*.db
 
 # bower dependencies
 bower_components/

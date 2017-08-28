@@ -9,12 +9,12 @@ import jwt
 import requests
 from datetime import datetime, timedelta
 from flask import Flask, jsonify, request
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from jwt import DecodeError, ExpiredSignature
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['TOKEN_SECRET'] = 'very secret'
 app.config['FACEBOOK_SECRET'] = os.environ.get('FACEBOOK_SECRET')
 
@@ -37,8 +37,8 @@ class User(db.Model):
         return token.decode('unicode_escape')
 
 
-if os.path.exists('db.sqlite'):
-    os.remove('db.sqlite')
+if os.path.exists('app.db'):
+    os.remove('app.db')
 
 db.create_all()
 
