@@ -1,6 +1,6 @@
 This webapp requires these programs: 
 
-- Python 2.7.*
+- Python(shoud work for both Python 2 and 3)
 - pip
 - virtualenv
 - bower
