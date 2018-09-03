@@ -1,20 +1,32 @@
-FROM ubuntu:16.04
-
-# install python3
-RUN apt-get update && apt-get install -y python3-dev python3-pip
-ADD . /code
+FROM python:3.7-alpine
 WORKDIR /code
-RUN pip3 install -q -r requirements.txt
 
-# install nodejs and bower
-RUN apt-get install -y curl python-software-properties git
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
-RUN apt-get install -y nodejs
-RUN npm install -g bower
+# install node, bower: bower might need git as well
+RUN apk add --update nodejs nodejs-npm git \
+    && npm install -g bower
 
-# install bower dependencies
-RUN cd static && bower --allow-root install
+COPY ./requirements.txt .
 
-EXPOSE 5002
+RUN set -e; \
+    # workaround to install cryptography
+    apk del libressl-dev \
+    && apk add openssl-dev \
+    # for cffi
+    && apk add libffi-dev build-base \
+    # for pillow
+    && apk add build-base python-dev jpeg-dev zlib-dev \
+    && pip install -r requirements.txt \
+    # remove cryptography workaround
+    && apk del openssl-dev \
+    && apk add libressl-dev
 
-CMD python3 app.py
+COPY ./static/bower.json ./static/bower.json
+RUN cd static \
+    && bower install --allow-root
+
+ADD . /code
+
+# expose port
+EXPOSE 5003
+
+CMD ["python", "app.py" ]
